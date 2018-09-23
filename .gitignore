@@ -1,0 +1,8 @@
+*.swp
+*~
+
+# Binaries
+mailproxy
+
+# Non-external dependencies.
+vendor/github.com/katzenpost
