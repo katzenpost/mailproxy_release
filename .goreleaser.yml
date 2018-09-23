@@ -1,6 +1,6 @@
 # goreleaser.yml
 # Release automation
-project_name: katzenpost
+project_name: mailproxy
 sign:
    artifacts: all
 builds:
