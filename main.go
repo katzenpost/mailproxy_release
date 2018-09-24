@@ -20,18 +20,98 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/user"
 	"os/signal"
+	"path"
 	"syscall"
 
+	"github.com/katzenpost/playground"
 	"github.com/katzenpost/mailproxy"
 	"github.com/katzenpost/mailproxy/config"
 	"github.com/katzenpost/mailproxy/event"
+	"github.com/katzenpost/core/utils"
+	rclient "github.com/katzenpost/registration_client/mailproxy"
+	"github.com/katzenpost/registration_client"
+
 )
 
 func main() {
 	cfgFile := flag.String("f", "katzenpost.toml", "Path to the server config file.")
 	genOnly := flag.Bool("g", false, "Generate the keys and exit immediately.")
+	register := flag.Bool("r", false, "Register the account")
+	accountName := flag.String("account", "", "account name to register")
+	providerName := flag.String("provider", playground.ProviderName, "provider to use")
+	providerKey := flag.String("providerKey", playground.ProviderKeyPin, "provider to use")
+
+	authority := flag.String("authority", playground.AuthorityAddr, "address of nonvoting pki")
+	onionAuthority := flag.String("onionAuthority", playground.OnionAuthorityAddr, ".onion address of nonvoting pki")
+	authorityKey := flag.String("authorityKey", playground.AuthorityPublicKey, "authority public key, base64 or hex")
+
+	registrationAddr := flag.String("registrationAddr", playground.RegistrationAddr, "account registration address")
+	onionRegistrationAddr := flag.String("onionRegistrationAddr", playground.OnionRegistrationAddr, "account registration address")
+
+	registerWithOnion := flag.Bool("onion", false, "register using the Tor onion service")
+	socksNet := flag.String("torSocksNet", "tcp", "tor SOCKS network (e.g. tcp or unix)")
+	socksAddr := flag.String("torSocksAddr", "127.0.0.1:9150", "tor SOCKS address (e.g. 127.0.0.1:9050")
+
+	dataDir := flag.String("dataDir", "", "mailproxy data directory, defaults to ~/.mailproxy")
+
 	flag.Parse()
+
+	if *register {
+		if len(*accountName) == 0 {
+			flag.Usage()
+			return
+		}
+
+		// 1. ensure mailproxy data dir doesn't already exist
+		mailproxyDir := ""
+		if len(*dataDir) == 0 {
+			usr, err := user.Current()
+			if err != nil {
+				panic("failure to retrieve current user information")
+			}
+			mailproxyDir = path.Join(usr.HomeDir, ".mailproxy")
+		} else {
+			mailproxyDir = *dataDir
+		}
+		if _, err := os.Stat(mailproxyDir); !os.IsNotExist(err) {
+			panic(fmt.Sprintf("aborting registration, %s already exists", mailproxyDir))
+		}
+		if err := utils.MkDataDir(mailproxyDir); err != nil {
+			panic(err)
+		}
+
+		// 2. generate mailproxy key material and configuration
+		linkKey, identityKey, err := rclient.GenerateConfig(*accountName, *providerName, *providerKey, *authority, *onionAuthority, *authorityKey, mailproxyDir, *socksNet, *socksAddr, *registerWithOnion)
+		if err != nil {
+			panic(err)
+		}
+
+		// 3. perform registration with the mixnet Provider
+		var options *client.Options = nil
+		if *registerWithOnion {
+			registrationAddr = onionRegistrationAddr
+			options = &client.Options{
+				Scheme:       "http",
+				UseSocks:     true,
+				SocksNetwork: *socksNet,
+				SocksAddress: *socksAddr,
+			}
+		}
+		c, err := client.New(*registrationAddr, options)
+		if err != nil {
+			panic(err)
+		}
+		err = c.RegisterAccountWithIdentityAndLinkKey(*accountName, linkKey, identityKey)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("Successfully registered %s@%s\n", *accountName, *providerName)
+		fmt.Printf("mailproxy -f %s\n", *dataDir+"/mailproxy.toml")
+		return
+	}
 
 	// Set the umask to something "paranoid".
 	syscall.Umask(0077)
