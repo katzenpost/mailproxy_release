@@ -24,10 +24,10 @@ Please consult the Katzenpost Handbook for more information: https://katzenpost.
 
    * https://github.com/katzenpost/mailproxy_release/releases
 
-1. Run the registration program to register your account on the mix network:
+1. Register your account on the mix network:
    ::
 
-      katzenpost_registration -name alice
+      mailproxy -r -account alice
 
    The above example creates the "alice" user on the "idefix" provider and is
    therefore addressed as ``alice@idefix``.
@@ -36,13 +36,13 @@ Please consult the Katzenpost Handbook for more information: https://katzenpost.
    have Tor on your system you can register using our onion service like this:
    ::
 
-      katzenpost_registration -name alice -onion -torSocksAddr 127.0.0.1:9050
+      mailproxy -r -account alice -onion -torSocksAddr 127.0.0.1:9050
 
 
    Or if you run the Tor Browser Bundle with the default Tor setup then simply:
    ::
 
-      katzenpost_registration -name alice -onion
+      mailproxy -r -account alice -onion
 
 
 2. The above command should have printed "Success" and created a ~/.mailproxy directory
