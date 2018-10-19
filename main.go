@@ -82,7 +82,7 @@ func main() {
 		}
 
 		// 2. generate mailproxy key material and configuration
-		linkKey, identityKey, err := rclient.GenerateConfig(*accountName, *providerName, *providerKey, *authority, *onionAuthority, *authorityKey, mailproxyDir, *socksNet, *socksAddr, *registerWithOnion)
+		linkKey, identityKey, err := rclient.GenerateConfig(*accountName, *providerName, *providerKey, *authority, *onionAuthority, *authorityKey, mailproxyDir, *socksNet, *socksAddr, *registerWithOnion, playground.Authorities)
 		if err != nil {
 			panic(err)
 		}
