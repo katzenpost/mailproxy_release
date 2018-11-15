@@ -81,7 +81,7 @@ Please consult the Katzenpost Handbook for more information: https://katzenpost.
       default specify TLS is used.  Set POP3 authentication to
       ``Normal Password`` and SMTP authentication to ``No
       Authentication``. POP3 authentication username must be set to
-      ``alice@playground`` where ``alice`` is replaced with your username
+      ``alice@idefix`` where ``alice`` is replaced with your username
       that you registered with. The password can be set to anything.
 
     Alternatively, for quick testing, you can use command line clients like curl to fetch and display mail (``curl --user alice@idefix:somepassword pop3://127.0.0.1:2424/``) and swaks for sending mail (``swaks --from alice@idefix --to bob@ramix --server 127.0.0.1:2525``).
