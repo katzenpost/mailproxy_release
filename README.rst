@@ -84,7 +84,7 @@ Please consult the Katzenpost Handbook for more information: https://katzenpost.
       ``alice@playground`` where ``alice`` is replaced with your username
       that you registered with. The password can be set to anything.
 
-    Alternatively, for quick testing, you can use command line clients like curl to fetch and display mail (``curl --user alice@idefix:somepassword pop3://127.0.0.1:2424/``) and swaks for sending mail (``swaks --from alice@idefix --to bob@ramix --server 127.0.0.1:2525``).
+    Alternatively, for quick testing, you can use command line clients like curl to fetch and display mail (``curl --user alice@idefix:somepassword pop3://127.0.0.1:2524/``) and swaks for sending mail (``swaks --from alice@idefix --to bob@ramix --server 127.0.0.1:2525``).
 
 For more joy, change the log level from ``NOTICE`` to ``DEBUG`` in your ``mailproxy.toml``.
 
