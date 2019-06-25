@@ -10,15 +10,6 @@ import (
 	"github.com/emersion/go-textwrapper"
 )
 
-type unknownEncodingError struct {
-	error
-}
-
-func isUnknownEncoding(err error) bool {
-	_, ok := err.(unknownEncodingError)
-	return ok
-}
-
 func encodingReader(enc string, r io.Reader) (io.Reader, error) {
 	var dec io.Reader
 	switch strings.ToLower(enc) {
@@ -38,11 +29,9 @@ type nopCloser struct {
 	io.Writer
 }
 
-func (nopCloser) Close() error {
-	return nil
-}
+func (nopCloser) Close() error { return nil }
 
-func encodingWriter(enc string, w io.Writer) (io.WriteCloser, error) {
+func encodingWriter(enc string, w io.Writer) io.WriteCloser {
 	var wc io.WriteCloser
 	switch strings.ToLower(enc) {
 	case "quoted-printable":
@@ -51,10 +40,8 @@ func encodingWriter(enc string, w io.Writer) (io.WriteCloser, error) {
 		wc = base64.NewEncoder(base64.StdEncoding, textwrapper.NewRFC822(w))
 	case "7bit", "8bit":
 		wc = nopCloser{textwrapper.New(w, "\r\n", 1000)}
-	case "binary", "":
+	default: // "binary"
 		wc = nopCloser{w}
-	default:
-		return nil, fmt.Errorf("unhandled encoding %q", enc)
 	}
-	return wc, nil
+	return wc
 }
