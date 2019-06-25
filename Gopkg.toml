@@ -9,15 +9,15 @@ required = ["github.com/coreos/bbolt"]
 
 [[constraint]]
   name = "github.com/katzenpost/core"
-  version = "0.0.4"
+  version = "0.0.7"
 
 [[constraint]]
   name = "github.com/katzenpost/mailproxy"
-  version = "0.0.3"
+  version = "0.0.6"
 
 [[constraint]]
   name = "github.com/katzenpost/registration_client"
-  version = "0.0.0"
+  version = "0.0.1"
 
 [prune]
   go-tests = true
