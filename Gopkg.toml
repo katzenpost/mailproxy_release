@@ -7,6 +7,10 @@ required = ["github.com/coreos/bbolt"]
   version = "1.3.1-coreos.6"
   name = "github.com/coreos/bbolt"
 
+[[override]]
+  version = "0.9.1"
+  name = "github.com/emersion/go-message"
+
 [[constraint]]
   name = "github.com/katzenpost/core"
   version = "0.0.7"
