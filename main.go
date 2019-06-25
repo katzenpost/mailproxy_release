@@ -28,7 +28,6 @@ import (
 	"github.com/katzenpost/core/utils"
 	"github.com/katzenpost/mailproxy"
 	"github.com/katzenpost/mailproxy/config"
-	"github.com/katzenpost/mailproxy/event"
 	"github.com/katzenpost/playground"
 	"github.com/katzenpost/registration_client"
 	rclient "github.com/katzenpost/registration_client/mailproxy"
@@ -125,7 +124,6 @@ func main() {
 	ch := make(chan os.Signal)
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
 
-	cfg.Proxy.EventSink = make(chan event.Event)
 	// Start up the proxy.
 	proxy, err := mailproxy.New(cfg)
 	if err != nil {
@@ -145,7 +143,6 @@ func main() {
 				proxy.ScanRecipientDir()
 			default:
 				proxy.Shutdown()
-				close(cfg.Proxy.EventSink)
 				return
 			}
 		}
