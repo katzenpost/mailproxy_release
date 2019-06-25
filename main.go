@@ -20,19 +20,18 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"os/user"
 	"os/signal"
+	"os/user"
 	"path"
 	"syscall"
 
-	"github.com/katzenpost/playground"
+	"github.com/katzenpost/core/utils"
 	"github.com/katzenpost/mailproxy"
 	"github.com/katzenpost/mailproxy/config"
 	"github.com/katzenpost/mailproxy/event"
-	"github.com/katzenpost/core/utils"
-	rclient "github.com/katzenpost/registration_client/mailproxy"
+	"github.com/katzenpost/playground"
 	"github.com/katzenpost/registration_client"
-
+	rclient "github.com/katzenpost/registration_client/mailproxy"
 )
 
 func main() {
