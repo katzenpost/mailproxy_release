@@ -108,7 +108,7 @@ func main() {
 		}
 
 		fmt.Printf("Successfully registered %s@%s\n", *accountName, *providerName)
-		fmt.Printf("mailproxy -f %s\n", *mailproxyDir+"/mailproxy.toml")
+		fmt.Printf("mailproxy -f %s\n", mailproxyDir+"/mailproxy.toml")
 		return
 	}
 
